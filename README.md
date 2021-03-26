@@ -7,7 +7,10 @@ I've found that it decreased the build time of the software I was
 working on by 10% for a full rebuild, and 30% for a single file
 change. That software has a pretty flat build tree, and a single
 Makefile, so I expect greater speedups are possible for some
-systems.
+systems. On the other hand, make2ninja does not express
+the entire dependency graph, which might result in builds
+that are slower then necessary?
+
 
 Already this is a pretty nice improvement- its a tiny little
 script that didn't take much time to create, and I get a bit
@@ -49,8 +52,16 @@ This tool could detect .d files in the rules, and add the 'dep'
 and 'depfile' variables to its output.
 
 
+Currently make2ninja does not express the entire dependency
+graph in the ninja file- it takes a topological sort given
+by make and expresses that. I don't think it would be
+hard to change this, and it might result in faster builds for
+more complex projects. I have not looked into this at all.
+
+
 It could also just be written in a clearer and more organized fashion-
 its just a proof of concept right now.
+
 
 In prinicpal something could be done to detect changes in the build to
 regenerate the file, or incorporate this tool into the make file to
@@ -60,5 +71,4 @@ entirely.
 
 Please feel free to fork, PR, or make an issue if this is an interesting
 or useful tool!
-
 
