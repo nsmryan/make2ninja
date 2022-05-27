@@ -11,6 +11,7 @@ import fileinput
 # 
 
 start_target_pattern = " *Considering target file '(.+)'."
+pruning_pattern = " *Pruning file '(.+)'."
 end_target_pattern = " *Successfully remade target file '(.+)'."
 no_remake_pattern = " *No need to remake target '(.+)'."
 no_remake_vpath_pattern = " *No need to remake target '(.+)'; using VPATH name '(.+)'."
@@ -39,6 +40,18 @@ def from_lines(lines):
             target_commands[target_name] = []
 
             target_sorted.append(target_name)
+            continue
+        
+        # pruning file, add it as a dep to current target
+        match = re.search(pruning_pattern, line)
+        if match != None:
+            assert len(target_stack) > 0
+
+            target_name = target_stack[-1]
+            dep = match.group(1)
+            if (target_name != dep):
+                target_map[target_name].append(dep)
+
             continue
 
         # remove target, built
