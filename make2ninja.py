@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # loop through targets and output rule and build information
     output = []
     for target_name in target_sorted:
-        target_base = os.path.basename(target_name)
+        target_base = target_name.replace("/", "_")
         target_base = target_base.replace(".", "_")
 
         commands = target_commands[target_name]
