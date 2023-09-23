@@ -2,7 +2,7 @@ import re
 import os
 import sys
 import fileinput
-
+import platform
 
 # consider --help
 # consider input from file?
@@ -16,6 +16,11 @@ end_target_pattern = " *Successfully remade target file '(.+)'."
 no_remake_pattern = " *No need to remake target '(.+)'."
 no_remake_vpath_pattern = " *No need to remake target '(.+)'; using VPATH name '(.+)'."
 command_pattern = " *Must remake target '(.+)'."
+
+cmd_builtins=("CD", "CHDIR", "COPY", "DEL", "ERASE", "DIR", "MD", "MKDIR", "PATH",
+              "REN", "RENAME", "RD", "RMDIR", "CLS", "ECHO", "EXIT", "TYPE", "DATE",
+              "TIME", "BREAK", "CALL", "CHCP", "FOR", "GOTO", "IF", "PAUSE", "PROMPT",
+              "REM", "SET", "SHIFT", "VER", "VERIFY", "VOL")
 
 def from_lines(lines):
     target_stack = []
@@ -113,6 +118,9 @@ if __name__ == "__main__":
 
         command = " && ".join(commands)
         command = command.replace('\n', '')
+        if 'Windows' == platform.system():
+            if len(commands) > 1 or command.split(maxsplit=1)[0].upper() in cmd_builtins:
+                command = 'cmd /c "' + command + '"'
 
         rule = "rule " + target_base + "_rule\n  command = " + command
 
@@ -120,7 +128,7 @@ if __name__ == "__main__":
         dep_list = ""
         for dep in deps:
             if dep in target_path:
-                dep_list += target_path[dep] + " "
+                dep_list += target_path[dep].replace(':', '$:') + " "
             else:
                 dep_list += dep + " "
         build = "build " + target_name + ": " + target_base + "_rule " + dep_list
