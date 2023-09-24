@@ -10,12 +10,13 @@ import platform
 # consider option for dep if you know this is done in commands
 # 
 
-start_target_pattern = " *Considering target file '(.+)'."
-pruning_pattern = " *Pruning file '(.+)'."
-end_target_pattern = " *Successfully remade target file '(.+)'."
-no_remake_pattern = " *No need to remake target '(.+)'."
-no_remake_vpath_pattern = " *No need to remake target '(.+)'; using VPATH name '(.+)'."
-command_pattern = " *Must remake target '(.+)'."
+file_pattern = "[`'](.+)['']."
+start_target_pattern = " *Considering target file " + file_pattern
+pruning_pattern = " *Pruning file " + file_pattern
+end_target_pattern = " *Successfully remade target file " + file_pattern
+no_remake_pattern = " *No need to remake target " + file_pattern
+no_remake_vpath_pattern = " *No need to remake target " + file_pattern+"; using VPATH name " + file_pattern
+command_pattern = " *Must remake target " + file_pattern
 
 cmd_builtins=("CD", "CHDIR", "COPY", "DEL", "ERASE", "DIR", "MD", "MKDIR", "PATH",
               "REN", "RENAME", "RD", "RMDIR", "CLS", "ECHO", "EXIT", "TYPE", "DATE",
