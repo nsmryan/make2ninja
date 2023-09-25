@@ -129,10 +129,10 @@ if __name__ == "__main__":
         dep_list = ""
         for dep in deps:
             if dep in target_path:
-                dep_list += target_path[dep].replace(':', '$:') + " "
+                dep_list += target_path[dep] + " "
             else:
                 dep_list += dep + " "
-        build = "build " + target_name + ": " + target_base + "_rule " + dep_list
+        build = "build " + target_name + ": " + target_base + "_rule " + dep_list.replace(':', '$:')
 
         output.append(rule)
         output.append(build)
